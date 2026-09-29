@@ -1,364 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Pinnacle Travel Assistant</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-            background-size: cover;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        #chat-container {
-            width: 480px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            display: flex;
-            flex-direction: column;
-            height: 580px;
-        }
-
-        .chat-header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        h3 {
-            color: #0077b6;
-            margin: 0;
-            font-weight: 600;
-            font-size: 18px;
-        }
-
-        .user-id-box {
-            font-size: 11px;
-            color: #555;
-            background: #e2e8f0;
-            padding: 4px 8px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-
-        .user-id-box input {
-            border: none;
-            background: transparent;
-            font-family: 'Poppins', sans-serif;
-            font-size: 11px;
-            color: #333;
-            width: 110px;
-            outline: none;
-        }
-
-        .load-btn {
-            background: #0077b6;
-            color: white;
-            border: none;
-            padding: 2px 6px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 10px;
-        }
-
-        .end-btn {
-            background: #e63946;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-
-        .end-btn:hover {
-            background: #d62828;
-        }
-
-        #chat-box {
-            flex: 1;
-            overflow-y: auto;
-            border: 1px solid #b0e0e6;
-            background: #f0f8ff;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            scroll-behavior: smooth;
-        }
-
-        .message {
-            margin-bottom: 12px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .Bot { color: #023e8a; font-weight: 400; }
-        .You { color: #3a86ff; text-align: right; font-weight: 500; }
-
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 10px;
-            margin-bottom: 5px;
-        }
-
-        .option-btn {
-            background: linear-gradient(135deg, #00b4d8, #0077b6);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 25px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 119, 182, 0.3);
-            text-align: center;
-        }
-
-        .option-btn:hover {
-            background: linear-gradient(135deg, #0077b6, #03045e);
-            transform: translateY(-2px);
-        }
-
-        #input-area {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        #country-select {
-            display: none;
-            padding: 10px 8px;
-            border: 1px solid #0077b6;
-            border-radius: 20px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            background: white;
-            color: #023e8a;
-            outline: none;
-        }
-
-        #user-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #ccc;
-            border-radius: 25px;
-            outline: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-        }
-
-        #user-input:focus {
-            border-color: #0077b6;
-            box-shadow: 0 0 5px rgba(0, 119, 182, 0.3);
-        }
-
-        button.send-btn {
-            background: #2a9d8f;
-            color: white;
-            border: none;
-            padding: 0 20px;
-            height: 44px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-
-        button.send-btn:hover {
-            background: #21867a;
-        }
-    </style>
+  <title>Pinnacle Travel Bot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('hotel_vacation_background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+    }
+    #chatbox {
+      width: 60%;
+      margin: auto;
+      background: rgba(0,0,0,0.6);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    #conversation {
+      text-align: left;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 80%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: #ff9800;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div id="chat-container">
-        <div class="chat-header-bar">
-            <h3>🌴 Pinnacle Travel Assistant</h3>
-            <button class="end-btn" onclick="endChat()">End Chat</button>
-        </div>
-        
-        <div class="user-id-box">
-            <span>ID:</span>
-            <input type="text" id="user-id-field" readonly>
-            <button class="load-btn" onclick="loadHistoryByInput()">Switch/Load</button>
-        </div>
+  <!-- Bot name displayed above -->
+  <h1>🌴 Pinnacle Travel Bot 🌴</h1>
 
-        <div id="chat-box"></div>
-        <div id="input-area">
-            <select id="country-select">
-                <option value="+91">+91 (IN)</option>
-                <option value="+1">+1 (US)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+971">+971 (UAE)</option>
-                <option value="+61">+61 (AU)</option>
-            </select>
-            <input type="text" id="user-input" placeholder="Type your response here...">
-            <button class="send-btn" onclick="sendMessage()">Send</button>
-        </div>
-    </div>
+  <div id="chatbox">
+    <div id="conversation"></div>
+    <input type="text" id="userInput" placeholder="Type your message..." autofocus>
+    <button id="sendBtn">Send</button>
+  </div>
 
-    <script>
-        let userId = localStorage.getItem("pinnacle_user_id");
-        if (!userId) {
-            userId = "user_" + Math.random().toString(36).substring(2, 9);
-            localStorage.setItem("pinnacle_user_id", userId);
-        }
-        document.getElementById("user-id-field").value = userId;
+  <script>
+    async function sendMessage() {
+      let inputBox = document.getElementById("userInput");
+      let message = inputBox.value.trim();
+      if(message === "") return;
 
-        let currentBackendState = "WELCOME";
+      document.getElementById("conversation").innerHTML += "<p><b>You:</b> " + message + "</p>";
 
-        function appendMessage(sender, text, options = []) {
-            let chatBox = document.getElementById("chat-box");
-            let messageDiv = document.createElement("div");
-            messageDiv.className = `message ${sender}`;
-            messageDiv.innerHTML = `<b>${sender === 'You' ? 'You' : 'Bot'}:</b> ${text.replace(/\n/g, '<br>')}`;
-
-            if (options && options.length > 0) {
-                let optionsDiv = document.createElement("div");
-                optionsDiv.className = "options-container";
-                options.forEach(opt => {
-                    let btn = document.createElement("button");
-                    btn.className = "option-btn";
-                    btn.innerText = opt;
-                    btn.onclick = () => selectOption(opt, optionsDiv);
-                    optionsDiv.appendChild(btn);
-                });
-                messageDiv.appendChild(optionsDiv);
-            }
-
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function updateUIState(state) {
-            currentBackendState = state;
-            let countrySelect = document.getElementById("country-select");
-            let inputField = document.getElementById("user-input");
-
-            if (state === "CAPTURE_PHONE") {
-                countrySelect.style.display = "block";
-                inputField.placeholder = "Enter 10-digit number...";
-            } else {
-                countrySelect.style.display = "none";
-                inputField.placeholder = "Type your response here...";
-            }
-        }
-
-        function selectOption(option, optionsDiv) {
-            optionsDiv.remove();
-            appendMessage("You", option);
-            let queryText = option.toLowerCase();
-            if (queryText.includes("check-in")) queryText = "check-in";
-            else if (queryText.includes("refund")) queryText = "refund";
-            else if (queryText.includes("food")) queryText = "food";
-            sendToServer(queryText);
-        }
-
-        function sendMessage() {
-            let input = document.getElementById("user-input");
-            let countrySelect = document.getElementById("country-select");
-            let text = input.value.trim();
-            if (!text) return;
-
-            let finalMessage = text;
-            if (currentBackendState === "CAPTURE_PHONE" && countrySelect.style.display !== "none") {
-                finalMessage = countrySelect.value + text;
-            }
-
-            input.value = "";
-            appendMessage("You", finalMessage);
-            sendToServer(finalMessage);
-        }
-
-        document.getElementById("user-input").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                sendMessage();
-            }
+      try {
+        let response = await fetch("/chat", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({message: message, user_id: "guest"})
         });
 
-        function sendToServer(message) {
-            fetch('/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, message: message })
-            })
-            .then(res => res.json())
-            .then(data => {
-                updateUIState(data.state);
-                appendMessage("Bot", data.reply, data.options);
-            });
-        }
+        let data = await response.json();
+        document.getElementById("conversation").innerHTML += "<p><b>Pinnacle Travel Bot:</b> " + data.reply + "</p>";
 
-        function loadHistory() {
-            fetch('/get-history', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId })
-            })
-            .then(res => res.json())
-            .then(data => {
-                let chatBox = document.getElementById("chat-box");
-                chatBox.innerHTML = "";
-                updateUIState(data.state);
+        let convo = document.getElementById("conversation");
+        convo.scrollTop = convo.scrollHeight;
+      } catch (err) {
+        document.getElementById("conversation").innerHTML += "<p style='color:red'><b>Error:</b> Could not reach server.</p>";
+      }
 
-                if (data.history && data.history.length > 0) {
-                    data.history.forEach(log => {
-                        appendMessage(log.sender, log.text, log.options);
-                    });
-                } else {
-                    sendToServer("Hi");
-                }
-            });
-        }
+      inputBox.value = "";
+      inputBox.focus();
+    }
 
-        function loadHistoryByInput() {
-            let inputtedId = document.getElementById("user-id-field").value.trim();
-            if (inputtedId) {
-                userId = inputtedId;
-                localStorage.setItem("pinnacle_user_id", userId);
-                loadHistory();
-            }
-        }
-
-        function endChat() {
-            fetch('/end-chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId })
-            }).then(() => {
-                userId = "user_" + Math.random().toString(36).substring(2, 9);
-                localStorage.setItem("pinnacle_user_id", userId);
-                document.getElementById("user-id-field").value = userId;
-                document.getElementById("chat-box").innerHTML = "";
-                loadHistory();
-            });
-        }
-
-        window.onload = function() {
-            loadHistory();
-        };
-    </script>
+    document.getElementById("userInput").addEventListener("keypress", function(event) {
+      if(event.key === "Enter") sendMessage();
+    });
+    document.getElementById("sendBtn").addEventListener("click", sendMessage);
+  </script>
 </body>
 </html>
