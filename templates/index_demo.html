@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pinnacle Hotels & Resorts - Virtual Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(rgba(15,23,42,0.4), rgba(15,23,42,0.4)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+
+        /* Floating Chat Button */
+        #chat-toggle-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #0f172a;
+            color: #f8fafc;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            transition: transform 0.3s ease, background 0.3s ease;
+            z-index: 1000;
+        }
+
+        #chat-toggle-btn:hover {
+            background: #1e293b;
+            transform: scale(1.05);
+        }
+
+        /* Chat Container Window */
+        #chat-container {
+            position: fixed;
+            bottom: 95px;
+            right: 25px;
+            width: 380px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            height: 520px;
+            z-index: 1000;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #chat-container.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Header Bar */
+        .chat-header-bar {
+            background: #0f172a;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #22c55e;
+        }
+
+        h3 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.2px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .end-btn {
+            background: rgba(255,255,255,0.1);
+            color: #cbd5e1;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .end-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* Session ID Bar */
+        .user-id-box {
+            font-size: 10px;
+            color: #64748b;
+            background: #f8fafc;
+            padding: 6px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-id-box input {
+            border: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            color: #334155;
+            width: 120px;
+            outline: none;
+        }
+
+        .load-btn {
+            background: #cbd5e1;
+            color: #1e293b;
+            border: none;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        /* Chat Messages Box */
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8fafc;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            font-size: 13px;
+            line-height: 1.5;
+            max-width: 82%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .message.Bot {
+            background: #ffffff;
+            color: #1e293b;
+            align-self: flex-start;
+            border: 1px solid #e2e8f0;
+            border-top-left-radius: 2px;
+        }
+
+        .message.You {
+            background: #0f172a;
+            color: #ffffff;
+            align-self: flex-end;
+            border-top-right-radius: 2px;
+        }
+
+        /* Quick Reply Options */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .option-btn {
+            background: #ffffff;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background: #0f172a;
+            color: white;
+            border-color: #0f172a;
+        }
+
+        /* Typing Indicator Animation */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 8px 12px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            width: fit-content;
+            align-self: flex-start;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #94a3b8;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        /* Input Area */
+        #input-area {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            align-items: center;
+        }
+
+        #country-select {
+            display: none;
+            padding: 8px 6px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            background: white;
+            color: #0f172a;
+            outline: none;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+        }
+
+        #user-input:focus {
+            border-color: #0f172a;
+        }
+
+        button.send-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 0 16px;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        button.send-btn:hover {
+            background: #1e293b;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Trigger Button -->
+    <button id="chat-toggle-btn" onclick="toggleChat()">💬</button>
+
+    <!-- Chat Widget Box -->
+    <div id="chat-container">
+        <div class="chat-header-bar">
+            <div class="header-title-wrapper">
+                <div class="status-dot"></div>
+                <h3>Pinnacle Hotels Assistant</h3>
+            </div>
+            <div class="header-controls">
+                <button class="end-btn" onclick="endChat()">Reset</button>
+                <button class="end-btn" onclick="toggleChat()">✕</button>
+            </div>
+        </div>
+        
+        <div class="user-id-box">
+            <span>Session ID:</span>
+            <div>
+                <input type="text" id="user-id-field" readonly>
+                <button class="load-btn" onclick="loadHistoryByInput()">Load</button>
+            </div>
+        </div>
+
+        <div id="chat-box"></div>
+
+        <div id="input-area">
+            <select id="country-select">
+                <option value="+91">+91 (IN)</option>
+                <option value="+1">+1 (US)</option>
+                <option value="+44">+44 (UK)</option>
+                <option value="+971">+971 (UAE)</option>
+                <option value="+61">+61 (AU)</option>
+            </select>
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button class="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let userId = localStorage.getItem("pinnacle_user_id");
+        if (!userId) {
+            userId = "user_" + Math.random().toString(36).substring(2, 9);
+            localStorage.setItem("pinnacle_user_id", userId);
+        }
+        document.getElementById("user-id-field").value = userId;
+
+        let currentBackendState = "WELCOME";
+        let isChatOpen = false;
+
+        function toggleChat() {
+            let container = document.getElementById("chat-container");
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                container.classList.add("active");
+                document.getElementById("user-input").focus();
+            } else {
+                container.classList.remove("active");
+            }
+        }
+
+        function appendMessage(sender, text, options = []) {
+            let chatBox = document.getElementById("chat-box");
+            let messageDiv = document.createElement("div");
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+
+            if (options && options.length > 0) {
+                let optionsDiv = document.createElement("div");
+                optionsDiv.className = "options-container";
+                options.forEach(opt => {
+                    let btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = opt;
+                    btn.onclick = () => selectOption(opt, optionsDiv);
+                    optionsDiv.appendChild(btn);
+                });
+                messageDiv.appendChild(optionsDiv);
+            }
+
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            let chatBox = document.getElementById("chat-box");
+            let typingDiv = document.createElement("div");
+            typingDiv.className = "typing-indicator";
+            typingDiv.id = "typing-indicator";
+            typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            chatBox.appendChild(typingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            let typingDiv = document.getElementById("typing-indicator");
+            if (typingDiv) typingDiv.remove();
+        }
+
+        function updateUIState(state) {
+            currentBackendState = state;
+            let countrySelect = document.getElementById("country-select");
+            let inputField = document.getElementById("user-input");
+
+            if (state === "CAPTURE_PHONE") {
+                countrySelect.style.display = "block";
+                inputField.placeholder = "Enter 10-digit number...";
+            } else {
+                countrySelect.style.display = "none";
+                inputField.placeholder = "Type your message...";
+            }
+        }
+
+        function selectOption(option, optionsDiv) {
+            optionsDiv.remove();
+            appendMessage("You", option);
+            let queryText = option.toLowerCase();
+            if (queryText.includes("check-in")) queryText = "check-in";
+            else if (queryText.includes("refund")) queryText = "refund";
+            else if (queryText.includes("food")) queryText = "food";
+            sendToServer(queryText);
+        }
+
+        function sendMessage() {
+            let input = document.getElementById("user-input");
+            let countrySelect = document.getElementById("country-select");
+            let text = input.value.trim();
+            if (!text) return;
+
+            let finalMessage = text;
+            if (currentBackendState === "CAPTURE_PHONE" && countrySelect.style.display !== "none") {
+                finalMessage = countrySelect.value + text;
+            }
+
+            input.value = "";
+            appendMessage("You", finalMessage);
+            sendToServer(finalMessage);
+        }
+
+        document.getElementById("user-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function sendToServer(message) {
+            showTypingIndicator();
+            fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, message: message })
+            })
+            .then(res => res.json())
+            .then(data => {
+                removeTypingIndicator();
+                updateUIState(data.state);
+                appendMessage("Bot", data.reply, data.options);
+            })
+            .catch(() => {
+                removeTypingIndicator();
+                appendMessage("Bot", "Connection error. Please try again.");
+            });
+        }
+
+        function loadHistory() {
+            fetch('/get-history', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                let chatBox = document.getElementById("chat-box");
+                chatBox.innerHTML = "";
+                updateUIState(data.state);
+
+                if (data.history && data.history.length > 0) {
+                    data.history.forEach(log => {
+                        appendMessage(log.sender, log.text, log.options);
+                    });
+                } else {
+                    sendToServer("Hi");
+                }
+            });
+        }
+
+        function loadHistoryByInput() {
+            let inputtedId = document.getElementById("user-id-field").value.trim();
+            if (inputtedId) {
+                userId = inputtedId;
+                localStorage.setItem("pinnacle_user_id", userId);
+                loadHistory();
+            }
+        }
+
+        function endChat() {
+            fetch('/end-chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId })
+            }).then(() => {
+                userId = "user_" + Math.random().toString(36).substring(2, 9);
+                localStorage.setItem("pinnacle_user_id", userId);
+                document.getElementById("user-id-field").value = userId;
+                document.getElementById("chat-box").innerHTML = "";
+                loadHistory();
+            });
+        }
+
+        window.onload = function() {
+            loadHistory();
+        };
+    </script>
+</body>
+</html>
